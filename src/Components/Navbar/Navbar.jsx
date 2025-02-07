@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import "./Navbar.css";
 import logo from "../../assets/logo.png";
 import { Link } from "react-scroll";
@@ -6,21 +6,36 @@ import menu_icon from "../../assets/menu-icon.png";
 
 const Navbar = () => {
   const [sticky, setSticky] = useState(false);
+  const [extraSticky, setExtraSticky] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
+
+
 
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      window.scrollY > 50 ? setSticky(true) : setSticky(false);
-    });
+    const handleScroll = () => {
+      if (window.scrollY > 50 && window.scrollY < 100) {
+        setSticky(true);
+        setExtraSticky(false);
+      } else if (window.scrollY >= 100) {
+        setSticky(false);
+        setExtraSticky(true);
+      } else {
+        setSticky(false);
+        setExtraSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const [mobileMenu, setMobileMenu] = useState(false);
 
   const toggleMenu = () => {
     mobileMenu ? setMobileMenu(false) : setMobileMenu(true);
   };
 
   return (
-    <nav className={`container ${sticky ? "dark-nav" : ""}`}>
+    <nav className={`container ${sticky ? "dark-nav" : ""} ${extraSticky ? "extra-dark-nav" : ""}`}>
       <img src={logo} alt="" className="logo" />
       <ul className={mobileMenu ? "" : "hide-mobile-menu"}>
         <li>
